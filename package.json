@@ -3,11 +3,12 @@
     "version": "1.0.0",
     "description": "Code gen project creating convenience wrapper for kinky dungeon",
     "scripts": {
-        "clean": "npx rimraf ./Generated",
+        "clean": "npx rimraf ./Build ./Include ./Generated ./Deploy",
         "copy-asset": "npx copyfiles -u 1 Asset/* Generated",
         "build-generator": "npx tsc",
         "run-generator": "node Build/main.js",
-        "build": "npm run build-generator && npm run copy-asset && npm run run-generator"
+        "build-generated": "tsc --project ./Generated/tsconfig.json",
+        "build": "npm run build-generator && npm run copy-asset && npm run run-generator && npm run build-generated"
     },
     "type": "module",
     "author": "Balababa2143@gmail.com",
@@ -19,8 +20,5 @@
     },
     "exports": [
         "./Deploy/index.js"
-    ],
-    "dependencies": {
-        "kinkiest-dungeon": "file:Submodule/KDInterface"
-    }
+    ]
 }

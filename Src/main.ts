@@ -18,14 +18,9 @@ const KinkyDungeonNameSpaceRegex = [
     /(KinkyDungeon)/
 ]
 
-function ThrowIfNull<T>(obj: T | undefined | null, message: string = 'NullReferenceError', options?: ErrorOptions): asserts obj is T {
+function ThrowIfNull<T>(obj: T | undefined | null, message: string = 'NullReferenceError'): asserts obj is T {
     if (null == obj) {
-        throw new Error(message, {
-            cause: {
-                ...(options?.cause ?? {}),
-                ErrorType: 'NullReferenceError'
-            }
-        })
+        throw new Error(message)
     }
 }
 
@@ -34,7 +29,7 @@ function TryExtractNameWithoutNamespace(identifier: string) {
         KinkyDungeonNameSpaceRegex
             .map(regex => identifier.match(regex))
             .find(result => result)
-    return regexResult?.at(1)
+    return regexResult? regexResult[1] : null
 }
 
 function CreateAliasIfDifferent(sourceFile: TSMorph.SourceFile, oldName: string, newName: string) {
