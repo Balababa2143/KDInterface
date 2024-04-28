@@ -1,24 +1,24 @@
 {
     "compilerOptions": {
-      "strict": true,
-      "alwaysStrict": true,
-      "strictBindCallApply": true,
-      "outDir": "Build",
-      "declarationDir": "Include",
-      "declaration": true,
-      "sourceMap": true,
-      "target": "ESNext",
-      "module": "ESNext",
-      "moduleResolution": "node",
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "lib": [
-        "DOM",
-        "ESNext"
-      ],
-      "skipLibCheck": true
+        "strict": true,
+        "alwaysStrict": true,
+        "strictBindCallApply": true,
+        "outDir": "Build",
+        "declarationDir": "Include",
+        "declaration": true,
+        "sourceMap": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "DOM",
+            "ESNext"
+        ],
+        "skipLibCheck": true
     },
     "include": [
-      "Src/**/*"
+        "Src/**/*"
     ]
 }

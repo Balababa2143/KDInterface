@@ -1,27 +1,31 @@
 {
     "compilerOptions": {
-      "strict": true,
-      "alwaysStrict": true,
-      "strictBindCallApply": true,
-      "outDir": "../Deploy",
-      "declarationDir": "../Deploy",
-      "declaration": true,
-      "sourceMap": true,
-      "target": "ESNext",
-      "module": "ESNext",
-      "moduleResolution": "node",
-      "allowSyntheticDefaultImports": true,
-      "allowJs": true,
-      "checkJs": true,
-      "lib": [
-        "ESNext",
-        "DOM"
-      ]
+        "strict": true,
+        "alwaysStrict": true,
+        "strictBindCallApply": true,
+        "outDir": "../Deploy",
+        "declarationDir": "../Deploy",
+        "declaration": true,
+        "sourceMap": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
+        "checkJs": true,
+        "composite": true,
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "rootDir": "./Src"
     },
     "include": [
-      "Src/**/*"
+        "Src/**/*"
     ],
     "references": [
-        {"path": ".././SubModule/KDInterface"}
+        {
+            "path": ".././SubModule/KDInterface"
+        }
     ]
 }
