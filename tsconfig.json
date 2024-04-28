@@ -1,27 +1,21 @@
 {
     "compilerOptions": {
-      "target": "ES2022",
-      "module": "ES2022",
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "allowJs": true,
-      "checkJs": true,
       "strict": true,
       "alwaysStrict": true,
       "strictBindCallApply": true,
-      "outDir": "build",
-      "declarationDir": "include",
+      "outDir": "Build",
+      "declarationDir": "Include",
       "declaration": true,
       "sourceMap": true,
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "node",
       "lib": [
-        "DOM",
-        "DOM.Iterable",
-        "ES2022"
+        "ESNext",
+        "DOM"
       ]
     },
     "include": [
-      "src/**/*"
+      "Src/**/*"
     ],
 }
