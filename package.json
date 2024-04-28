@@ -4,9 +4,11 @@
   "description": "Code gen project creating convenience wrapper for kinky dungeon",
   "main": "index.js",
   "scripts": {
-    "clean": "npx rimraf Generated",
+    "clean": "npx rimraf ./Generated",
     "copy-asset": "npx copyfiles -u 1 Asset/* Generated",
-    "build-generator": "npx tsc"
+    "build-generator": "npx tsc",
+    "run-generator": "node Build/main.js",
+    "build": "npm run build-generator && npm run copy-asset && npm run run-generator"
   },
   "type": "module",
   "author": "Balababa2143@gmail.com",
