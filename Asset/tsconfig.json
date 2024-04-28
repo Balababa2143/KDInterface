@@ -10,14 +10,18 @@
       "target": "ESNext",
       "module": "ESNext",
       "moduleResolution": "node",
-      "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
+      "allowJs": true,
+      "checkJs": true,
       "lib": [
-        "DOM",
-        "ESNext"
+        "ESNext",
+        "DOM"
       ]
     },
     "include": [
       "Src/**/*"
+    ],
+    "references": [
+        {"path": ".././SubModule/KDInterface"}
     ]
 }

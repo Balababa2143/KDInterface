@@ -2,15 +2,21 @@
   "name": "kinkydungeoninterfacewrapper",
   "version": "1.0.0",
   "description": "Code gen project creating convenience wrapper for kinky dungeon",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "ci-build": "npx tsc"
+    "clean": "npx rimraf Generated",
+    "copy-asset": "npx copyfiles -u 1 Asset/* Generated",
+    "build-generator": "npx tsc"
   },
   "type": "module",
-  "author": "",
+  "author": "Balababa2143@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "pixi": "^0.3.1",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.5",
     "ts-morph": "^22.0.0"
+  },
+  "exports": {
+    "default": "./Generated"
   }
 }
