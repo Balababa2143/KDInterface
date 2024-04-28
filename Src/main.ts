@@ -76,7 +76,7 @@ function TransformFunction(source: TSMorph.SourceFile) {
                 })
             }
             const newFunc = source.addFunction({
-                name: `Packed${newFuncName}`,
+                name: `${newFuncName}_`,
                 isAsync: func.isAsync(),
                 isExported: true
             })
@@ -94,12 +94,12 @@ function TransformFunction(source: TSMorph.SourceFile) {
             return newFunc
         }
         //#endregion
+        const result = [] 
         if (funcParams.length > 4) {
-            return GeneratePackedFunction()
+            result.push(GeneratePackedFunction())
         }
-        else {
-            return CreateAliasIfDifferent(source, oldFuncName, newFuncName)
-        }
+        result.push(CreateAliasIfDifferent(source, oldFuncName, newFuncName))
+        return result
     }
 }
 
@@ -160,6 +160,15 @@ function GenerateExportIndex(folder: TSMorph.Directory) {
                 namespaceExport: sourceFile.getBaseNameWithoutExtension()
             })
         })
+    folder
+        .getDirectories()
+        .filter(folder => folder.getSourceFile('index.ts'))
+        .forEach(folder =>{
+            moduleExportFile.addExportDeclaration({
+                moduleSpecifier: `./${folder.getBaseName()}`,
+                namespaceExport: folder.getBaseName()
+            })
+        })
 }
 
 const CodeGenFolder = GeneratedProject.createDirectory('Generated/Src')
@@ -168,6 +177,7 @@ const CodeGenGameSourceFolder = CodeGenFolder.createDirectory('Game')
 
 TransformDirectory(CodeGenGameSourceFolder)(GameSourceFolder)
 GenerateExportIndex(CodeGenGameSourceFolder)
+GenerateExportIndex(CodeGenFolder)
 
 GeneratedProject.saveSync()
 console.log()
