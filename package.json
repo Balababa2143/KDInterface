@@ -1,24 +1,26 @@
 {
-  "name": "kinkydungeoninterfacewrapper",
-  "version": "1.0.0",
-  "description": "Code gen project creating convenience wrapper for kinky dungeon",
-  "main": "index.js",
-  "scripts": {
-    "clean": "npx rimraf ./Generated",
-    "copy-asset": "npx copyfiles -u 1 Asset/* Generated",
-    "build-generator": "npx tsc",
-    "run-generator": "node Build/main.js",
-    "build": "npm run build-generator && npm run copy-asset && npm run run-generator"
-  },
-  "type": "module",
-  "author": "Balababa2143@gmail.com",
-  "license": "MIT",
-  "devDependencies": {
-    "copyfiles": "^2.4.1",
-    "rimraf": "^5.0.5",
-    "ts-morph": "^22.0.0"
-  },
-  "exports": {
-    "default": "./Generated"
-  }
+    "name": "kinkydungeoninterfacewrapper",
+    "version": "1.0.0",
+    "description": "Code gen project creating convenience wrapper for kinky dungeon",
+    "scripts": {
+        "clean": "npx rimraf ./Generated",
+        "copy-asset": "npx copyfiles -u 1 Asset/* Generated",
+        "build-generator": "npx tsc",
+        "run-generator": "node Build/main.js",
+        "build": "npm run build-generator && npm run copy-asset && npm run run-generator"
+    },
+    "type": "module",
+    "author": "Balababa2143@gmail.com",
+    "license": "MIT",
+    "devDependencies": {
+        "copyfiles": "^2.4.1",
+        "rimraf": "^5.0.5",
+        "ts-morph": "^22.0.0"
+    },
+    "exports": [
+        "./Deploy/index.js"
+    ],
+    "dependencies": {
+        "kinkiest-dungeon": "file:Submodule/KDInterface"
+    }
 }
