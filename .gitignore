@@ -10,3 +10,4 @@ Include
 Build
 Deploy
 Generated
+*.tsbuildinfo

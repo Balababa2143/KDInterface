@@ -1,22 +1,19 @@
 import * as TSMorph from 'ts-morph'
 
-const KDInterfaceProject = new TSMorph.Project({
-    tsConfigFilePath: 'Submodule/KDInterface/tsconfig.json'
-})
-
-const KDInterface = KDInterfaceProject.getDirectoryOrThrow('Submodule/KDInterface')
-
+const KDInterfaceProject = new TSMorph.Project()
 const GeneratedProject = new TSMorph.Project({
     tsConfigFilePath: 'Generated/tsconfig.json'
 })
 
 const KinkyDungeonNameSpaceRegex = [
-    /(KD\w+)/,
-    /KinkyDungeon(\w+)/,
-    /(\w+KD)/,
-    /(\w+)KinkyDungeon/,
-    /(KinkyDungeon)/
+    /^KinkyDungeon(\w+)/,
+    /^(KD\w+)/,
+    /^(KinkyDungeon)/
 ]
+// const KDNamespaceRegex = [
+//     /KD(\w+)/,
+//     /(\w+)KD/,
+// ]
 
 function ThrowIfNull<T>(obj: T | undefined | null, message: string = 'NullReferenceError'): asserts obj is T {
     if (null == obj) {
@@ -25,18 +22,30 @@ function ThrowIfNull<T>(obj: T | undefined | null, message: string = 'NullRefere
 }
 
 function TryExtractNameWithoutNamespace(identifier: string) {
-    const regexResult =
-        KinkyDungeonNameSpaceRegex
+    const matchRegexList = (regexList: RegExp[]) =>
+        regexList
             .map(regex => identifier.match(regex))
             .find(result => result)
-    return regexResult? regexResult[1] : null
+    let matchResult
+    if (matchResult = matchRegexList(KinkyDungeonNameSpaceRegex)) {
+        return matchResult[1]
+    }
+    // else if (matchResult = matchRegexList(KDNamespaceRegex)) {
+    //     return `_${matchResult[1]}`
+    // }
+    else {
+        return null
+    }
 }
 
 function CreateAliasIfDifferent(sourceFile: TSMorph.SourceFile, oldName: string, newName: string) {
-    if(oldName === newName){
+    if (oldName === newName) {
         return null
     }
-    else{
+    if(sourceFile.getVariableDeclaration(newName)){
+        throw new Error('Variable already exists')
+    }
+    else {
         return sourceFile.addVariableStatement({
             declarationKind: TSMorph.VariableDeclarationKind.Const,
             declarations: [
@@ -64,11 +73,12 @@ function TransformFunction(source: TSMorph.SourceFile) {
                 isExported: true
             })
             for (const arg of funcParams) {
-                newIntarface.addProperty({
+                const prop = {
                     name: arg.getName(),
                     type: arg.getType().getText(),
                     hasQuestionToken: arg.isOptional()
-                })
+                }
+                newIntarface.addProperty(prop)
             }
             const newFunc = source.addFunction({
                 name: `${newFuncName}_`,
@@ -89,11 +99,13 @@ function TransformFunction(source: TSMorph.SourceFile) {
             return newFunc
         }
         //#endregion
-        const result = [] 
+        const result = []
         if (funcParams.length > 4) {
             result.push(GeneratePackedFunction())
         }
-        result.push(CreateAliasIfDifferent(source, oldFuncName, newFuncName))
+        if(!source.getVariableDeclaration(newFuncName)){
+            result.push(CreateAliasIfDifferent(source, oldFuncName, newFuncName))
+        }
         return result
     }
 }
@@ -102,22 +114,15 @@ function TransformVariable(sourceFile: TSMorph.SourceFile) {
     return function (variable: TSMorph.VariableDeclaration) {
         const oldName = variable.getName()
         const newName = TryExtractNameWithoutNamespace(oldName) ?? oldName
-        return CreateAliasIfDifferent(sourceFile, oldName, newName)
+        if(!sourceFile.getVariableDeclaration(newName)){
+            return CreateAliasIfDifferent(sourceFile, oldName, newName)
+        }
     }
 }
 
 function TransformSourceFile(outputDir: TSMorph.Directory) {
     return function (sourceFile: TSMorph.SourceFile) {
-        const fileNameWithoutNamespace =
-            TryExtractNameWithoutNamespace(sourceFile.getBaseName())
-        let newSourceFile: TSMorph.SourceFile
-        if (fileNameWithoutNamespace) {
-            newSourceFile = outputDir.createSourceFile(`${fileNameWithoutNamespace}.ts`)
-        }
-        else {
-            console.log(`Unable to extract name from ${sourceFile.getBaseName()}`)
-            newSourceFile = outputDir.createSourceFile(sourceFile.getBaseName())
-        }
+        const newSourceFile = outputDir.createSourceFile(`${sourceFile.getBaseNameWithoutExtension()}.ts`)
         sourceFile
             .getFunctions()
             .filter(f => f.getName())
@@ -125,8 +130,14 @@ function TransformSourceFile(outputDir: TSMorph.Directory) {
         sourceFile
             .getVariableDeclarations()
             .forEach(TransformVariable(newSourceFile))
-        newSourceFile.addExportDeclaration({})
-        return newSourceFile
+        // newSourceFile.addExportDeclaration({})
+        if (newSourceFile.getChildCount() > 0) {
+            return newSourceFile
+        }
+        else {
+            newSourceFile.delete()
+            return null
+        }
     }
 }
 
@@ -134,10 +145,7 @@ function TransformDirectory(outFolder: TSMorph.Directory) {
     return function (folder: TSMorph.Directory) {
         folder
             .getSourceFiles()
-            .filter(file => 
-                KinkyDungeonNameSpaceRegex.some(regex => file.getBaseName().match(regex)) &&
-                !file.getBaseName().match('.d.ts')
-            )
+            .filter(file => file.getBaseName().match('KDInterface'))
             .map(TransformSourceFile(outFolder))
         return outFolder
     }
@@ -158,7 +166,7 @@ function GenerateExportIndex(folder: TSMorph.Directory) {
     folder
         .getDirectories()
         .filter(folder => folder.getSourceFile('index.ts'))
-        .forEach(folder =>{
+        .forEach(folder => {
             moduleExportFile.addExportDeclaration({
                 moduleSpecifier: `./${folder.getBaseName()}`,
                 namespaceExport: folder.getBaseName()
@@ -166,12 +174,10 @@ function GenerateExportIndex(folder: TSMorph.Directory) {
         })
 }
 
+const KDInterface = KDInterfaceProject.addSourceFileAtPath('Submodule/KDInterface/out/KDInterface.d.ts')
 const CodeGenFolder = GeneratedProject.createDirectory('Generated/Src')
-const GameSourceFolder = KDInterface.getDirectoryOrThrow('Game')
-const CodeGenGameSourceFolder = CodeGenFolder.createDirectory('Game')
 
-TransformDirectory(CodeGenGameSourceFolder)(GameSourceFolder)
-GenerateExportIndex(CodeGenGameSourceFolder)
+TransformSourceFile(CodeGenFolder)(KDInterface)
 GenerateExportIndex(CodeGenFolder)
 
 GeneratedProject.saveSync()

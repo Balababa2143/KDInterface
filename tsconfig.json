@@ -14,7 +14,8 @@
         "allowSyntheticDefaultImports": true,
         "lib": [
             "DOM",
-            "ESNext"
+            "ESNext",
+            "ESNext.Array"
         ],
         "skipLibCheck": true
     },
