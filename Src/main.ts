@@ -94,7 +94,7 @@ function TransformFunction(source: TSMorph.SourceFile) {
                     funcParams
                         .map(param => `${argsPack.getName()}.${param.getName()}`)
                         .join(', ')
-                writer.writeLine(`${func.getName()}(${argList})`)
+                writer.writeLine(`return ${func.getName()}(${argList})`)
             })
             return newFunc
         }
