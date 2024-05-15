@@ -174,10 +174,11 @@ function GenerateExportIndex(folder: TSMorph.Directory) {
         })
 }
 
-const KDInterface = KDInterfaceProject.addSourceFileAtPath('Submodule/KDInterface/out/KDInterface.d.ts')
+const KDInterface = KDInterfaceProject.addSourceFileAtPath('Submodule/KDInterface/out/main.d.ts')
 const CodeGenFolder = GeneratedProject.createDirectory('Generated/Src')
 
-TransformSourceFile(CodeGenFolder)(KDInterface)
+const file = TransformSourceFile(CodeGenFolder)(KDInterface)
+file?.move('KDInterface.ts')
 GenerateExportIndex(CodeGenFolder)
 
 GeneratedProject.saveSync()

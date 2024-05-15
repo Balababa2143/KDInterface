@@ -4,8 +4,6 @@
         "alwaysStrict": true,
         "strictBindCallApply": true,
         "outDir": "Build",
-        "declarationDir": "Include",
-        "declaration": true,
         "sourceMap": true,
         "target": "ESNext",
         "module": "ESNext",
