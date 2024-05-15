@@ -24,7 +24,7 @@
     ],
     "references": [
         {
-            "path": ".././SubModule/KDInterface"
+            "path": "../KinkyDungeon"
         }
     ]
 }

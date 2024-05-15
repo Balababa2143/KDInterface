@@ -174,7 +174,7 @@ function GenerateExportIndex(folder: TSMorph.Directory) {
         })
 }
 
-const KDInterface = KDInterfaceProject.addSourceFileAtPath('Submodule/KDInterface/out/main.d.ts')
+const KDInterface = KDInterfaceProject.addSourceFileAtPath('KinkyDungeon/out/main.d.ts')
 const CodeGenFolder = GeneratedProject.createDirectory('Generated/Src')
 
 const file = TransformSourceFile(CodeGenFolder)(KDInterface)
