@@ -5,7 +5,7 @@
         "strictBindCallApply": true,
         "outDir": "Deploy",
         "emitDeclarationOnly": true,
-        "sourceMap": true,
+        "inlineSourceMap": true,
         "target": "ESNext",
         "module": "ESNext",
         "moduleResolution": "node",
@@ -16,11 +16,10 @@
         "lib": [
             "ESNext",
             "DOM"
-        ],
-        "rootDir": "./Src"
+        ]
     },
     "include": [
-        "Src/**/*"
+        "*.ts"
     ],
     "references": [
         {

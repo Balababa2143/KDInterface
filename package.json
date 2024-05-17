@@ -8,7 +8,7 @@
         "build-generator": "npx tsc",
         "run-generator": "node Build/main.js",
         "build-generated": "tsc --project ./Generated/tsconfig.json",
-        "build": "npm run build-generator && npm run copy-asset && npm run run-generator && npm run build-generated"
+        "build": "npm run build-generator && npm run copy-asset && npm run run-generator"
     },
     "type": "module",
     "author": "Balababa2143@gmail.com",
