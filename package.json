@@ -20,5 +20,8 @@
     },
     "exports": [
         "./Deploy/index.js"
-    ]
+    ],
+    "dependencies": {
+        "immutable": "^4.3.6"
+    }
 }
