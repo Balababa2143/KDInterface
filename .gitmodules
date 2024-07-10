@@ -1,4 +1,4 @@
 [submodule "Submodule/KDInterface"]
 	path = KinkyDungeon
-	url = https://github.com/Balababa2143/KinkiestDungeonInterface.git
+	url = https://github.com/Balababa2143/KinkiestDungeonInterface
 	branch = TS-Interface
