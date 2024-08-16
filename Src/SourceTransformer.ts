@@ -1,16 +1,12 @@
-import Immutable, { Collection, Record, RecordOf, Seq } from 'immutable'
+import Immutable, { Collection, Record, Seq } from 'immutable'
 import {
-    CodeBlockWriter,
     Directory,
     FunctionDeclaration,
     FunctionDeclarationStructure,
     InterfaceDeclarationStructure,
-    NameableNode,
-    NameableNodeSpecific,
     OptionalKind,
     ParameterDeclarationStructure,
     SourceFile,
-    StructureKind,
     VariableDeclaration,
     VariableDeclarationKind,
     VariableStatementStructure,
@@ -34,7 +30,7 @@ function NotNullOrEmpty(value: string | null | undefined): value is string {
     return NotNullOrUndefined(value) && value !== ""
 }
 
-//#region renaming
+//#region Renaming
 const NameSpaceRegex = {
     LongKD: /^KinkyDungeon(\w+)/,
     ShortKD: /^KD(\w+)/,
@@ -105,7 +101,7 @@ const ResolveNameConflict = ([oldName, conflictedName]: [string, string]) => {
 }
 //#endregion
 
-//#region TransformFunction
+//#region Function
 interface TransformedFunction {
     OldName: string,
     NewName: string,
