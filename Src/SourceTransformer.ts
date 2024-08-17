@@ -91,10 +91,10 @@ const ResolveNameConflict = ([oldName, conflictedName]: [string, string]) => {
             return 'P' + conflictedName
         }
         else if (oldName.match(NameSpaceRegex.LongKD)) {
-            return '__' + conflictedName
+            return conflictedName
         }
         else {
-            return oldName
+            return '__' + oldName
         }
     })()
     return [oldName, conflictResolvedName] as [string, string]
@@ -216,7 +216,7 @@ const TransformVariable = (OldNewNameMap: Immutable.Map<string, string>) => (dec
             {
                 name: newName,
                 //TODO: think of a better way to handle this
-                initializer: `typeof ${oldName} === 'undefined' ? undefined : ${oldName}`
+                initializer: `(typeof ${oldName} === 'undefined' ? undefined : ${oldName})!`
             }
         ],
         isExported: true,
