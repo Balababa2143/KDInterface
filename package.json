@@ -4,7 +4,7 @@
     "description": "Code gen project creating convenience wrapper for kinky dungeon",
     "scripts": {
         "clean": "npx rimraf ./Build ./Include ./Generated ./Deploy",
-        "copy-asset": "npx copyfiles -u 1 Asset/* Generated",
+        "copy-asset": "npx copyfiles -u 1 Asset/**/* Generated",
         "build-generator": "npx tsc",
         "run-generator": "node Build/main.js",
         "build-generated": "tsc --project ./Generated/tsconfig.json",

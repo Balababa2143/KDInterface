@@ -215,7 +215,8 @@ const TransformVariable = (OldNewNameMap: Immutable.Map<string, string>) => (dec
         declarations: [
             {
                 name: newName,
-                initializer: `${oldName}`
+                //TODO: think of a better way to handle this
+                initializer: `typeof ${oldName} === 'undefined' ? undefined : ${oldName}`
             }
         ],
         isExported: true,
