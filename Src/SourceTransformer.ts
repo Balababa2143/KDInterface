@@ -6,6 +6,8 @@ import {
     InterfaceDeclarationStructure,
     OptionalKind,
     ParameterDeclarationStructure,
+    PropertyDeclarationStructure,
+    PropertySignatureStructure,
     SourceFile,
     VariableDeclaration,
     VariableDeclarationKind,
@@ -210,20 +212,16 @@ const GetAllNames = (nodes: Iterable<{ getName(): string | undefined }>) =>
 //#region Variable
 const TransformVariable = (OldNewNameMap: Immutable.Map<string, string>) => (decl: VariableDeclaration) => {
     const oldName = decl.getName()
-    const newName = OldNewNameMap.get(oldName)
-    return {
-        declarations: [
-            {
-                name: newName,
-                //TODO: think of a better way to handle this
-                initializer: `(typeof ${oldName} === 'undefined' ? undefined : ${oldName})!`
-            }
-        ],
-        isExported: true,
-        declarationKind: VariableDeclarationKind.Const
-    } as OptionalKind<VariableStatementStructure>
+    const newName = OldNewNameMap.get(oldName)!
+    const statement = `Object.defineProperty(Var, "${newName}", {\r\n    configurable: false,\r\n    enumerable: true,\r\n    get() {\r\n        return ${oldName};\r\n    },\r\n});`
+    const property: OptionalKind<PropertySignatureStructure> = {
+        name: newName,
+        type: `typeof ${oldName}`
+    }
+    return [statement, property] as const
 }
 //#endregion
+
 
 function GenerateIndexFile(dir: Directory) {
     const indexFile = dir.createSourceFile('index.ts')
@@ -284,21 +282,25 @@ export function TransformFunctionInSourceFile(outputDir: Directory) {
         })
         const indexFile = GenerateIndexFile(resultFolder)
 
-        const variableTransResult =
+        const [variableStatements, variableProps] =
             Seq(sourceFile.getVariableDeclarations())
                 .map(TransformVariable(oldNewNameMap))
-        const variableFolder = resultFolder.createDirectory('Var')
-        emitTransResult(variableTransResult, result =>{
-            const sourceFileName = `${result.declarations[0].name}.ts`
-            const sourceFile = GetOrCreateSourceFile(variableFolder, sourceFileName)
-            sourceFile.addVariableStatement(result)
-            return sourceFile
-        })
-        GenerateIndexFile(variableFolder)
+                .reduce(([statList, propList], [stat, prop])=> {
+                    statList.push(stat)
+                    propList.push(prop)
+                    return [statList, propList] as const
+                }, [<string[]>[], <OptionalKind<PropertySignatureStructure>[]>[]] as const)
 
-        indexFile.addExportDeclaration({
-            moduleSpecifier: './Var',
-            namespaceExport: 'Var'
+        indexFile.addStatements(
+            writer => writer.writeLine('export const Var: Var = {}')
+        )
+
+        indexFile.addStatements(variableStatements)
+
+        indexFile.addInterface({
+            name: 'Var',
+            isExported: true,
+            properties: variableProps
         })
         return resultFolder
     }
