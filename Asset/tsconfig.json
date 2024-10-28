@@ -1,13 +1,12 @@
 {
     "compilerOptions": {
-        "strict": true,
+        "strict": false,
         "alwaysStrict": true,
-        "strictBindCallApply": true,
         "outDir": "Deploy",
         "inlineSourceMap": true,
         "target": "ESNext",
         "module": "ESNext",
-        "moduleResolution": "node",
+        "moduleResolution": "Node",
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
         "checkJs": true,
