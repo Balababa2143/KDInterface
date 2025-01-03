@@ -125,10 +125,6 @@ const TransformFunction = (OldNewNameMap: Immutable.Map<string, string>) =>
         ThrowIfNull(oldFuncName, 'Function has no name')
         const newFuncName = OldNewNameMap.get(oldFuncName)
 
-        if (newFuncName == null) {
-            return null
-        }
-
         const GeneratePackedFunction = () => {
             const newIntarface: OptionalKind<InterfaceDeclarationStructure> = {
                 name: `I${newFuncName}Parameters`,
@@ -139,7 +135,7 @@ const TransformFunction = (OldNewNameMap: Immutable.Map<string, string>) =>
                 newIntarface.properties.push({
                     name: arg.getName(),
                     type: arg.getType().getText(),
-                    hasQuestionToken: arg.isOptional(),
+                    hasQuestionToken: arg.isOptional()
                 })
             }
             const argPack: OptionalKind<ParameterDeclarationStructure> = {
@@ -156,9 +152,9 @@ const TransformFunction = (OldNewNameMap: Immutable.Map<string, string>) =>
                 statements: writer => {
                     const argList =
                         funcParams
-                            .map(param => `${param.isRestParameter() ? '...' : ''}${argPack.name}.${param.getName()}`)
+                            .map(param => `${argPack.name}.${param.getName()}`)
                             .join(', ')
-                    writer.writeLine(`return globalThis.${func.getName()}(${argList})`)
+                    writer.writeLine(`return /* @__PURE__ */globalThis.${func.getName()}(${argList})`)
                 }
             }
             return [newFunc, newIntarface] as const
@@ -198,17 +194,12 @@ const TransformFunction = (OldNewNameMap: Immutable.Map<string, string>) =>
         if (newFuncName !== oldFuncName) {
             funcDescs.push(GenerateForwardFunction())
         }
-        if (funcDescs.length > 0) {
-            return TransformedFunction({
-                OldName: oldFuncName,
-                NewName: newFuncName,
-                FuncDescs: funcDescs,
-                ParamDescs: parameterPack
-            })
-        }
-        else {
-            return null
-        }
+        return TransformedFunction({
+            OldName: oldFuncName,
+            NewName: newFuncName,
+            FuncDescs: funcDescs,
+            ParamDescs: parameterPack
+        })
     }
 
 const GetAllNames = (nodes: Iterable<{ getName(): string | undefined }>) =>
@@ -266,7 +257,6 @@ export function TransformFunctionInSourceFile(outputDir: Directory) {
                 .valueSeq()
                 .map(seq => seq.first() as FunctionDeclaration)
                 .map(functionTransformer)
-                .filter(f => f != null)
                 .toList()
 
         const emitTransResult = <TransResult>(resultList: Iterable<TransResult>, emit: (result: TransResult) => SourceFile) => {
@@ -292,26 +282,26 @@ export function TransformFunctionInSourceFile(outputDir: Directory) {
         })
         const indexFile = GenerateIndexFile(resultFolder)
 
-        // const [variableStatements, variableProps] =
-        //     Seq(sourceFile.getVariableDeclarations())
-        //         .map(TransformVariable(oldNewNameMap))
-        //         .reduce(([statList, propList], [stat, prop])=> {
-        //             statList.push(stat)
-        //             propList.push(prop)
-        //             return [statList, propList] as const
-        //         }, [<string[]>[], <OptionalKind<PropertySignatureStructure>[]>[]] as const)
+        const [variableStatements, variableProps] =
+            Seq(sourceFile.getVariableDeclarations())
+                .map(TransformVariable(oldNewNameMap))
+                .reduce(([statList, propList], [stat, prop])=> {
+                    statList.push(stat)
+                    propList.push(prop)
+                    return [statList, propList] as const
+                }, [<string[]>[], <OptionalKind<PropertySignatureStructure>[]>[]] as const)
 
-        // indexFile.addStatements(
-        //     writer => writer.writeLine('export const Var: Var = {}')
-        // )
+        indexFile.addStatements(
+            writer => writer.writeLine('export const Var: Var = {}')
+        )
 
-        // indexFile.addStatements(variableStatements)
+        indexFile.addStatements(variableStatements)
 
-        // indexFile.addInterface({
-        //     name: 'Var',
-        //     isExported: true,
-        //     properties: variableProps
-        // })
+        indexFile.addInterface({
+            name: 'Var',
+            isExported: true,
+            properties: variableProps
+        })
         return resultFolder
     }
     return Transform
