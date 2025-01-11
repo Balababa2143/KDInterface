@@ -1,0 +1,15 @@
+{
+    "name": "kinkydungeoninterfacewrapper",
+    "version": "1.0.0",
+    "description": "Code gen project creating convenience wrapper for kinky dungeon",
+    "type": "module",
+    "author": "Balababa2143@gmail.com",
+    "license": "MIT",
+    "exports": "index.js",
+    "types": "index.d.ts",
+    "dependencies": {
+        "pixi-filters": "5.2.0",
+        "pixi.js": "^7.2.1",
+        "pixi.js-legacy": "^7.2.1"
+    }
+}
