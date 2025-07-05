@@ -8,6 +8,8 @@ import {
     PropertyDeclarationStructure,
     PropertySignatureStructure,
     SourceFile,
+    SyntaxKind,
+    TypeParameterDeclarationStructure,
     VariableDeclaration,
     VariableDeclarationKind,
     VariableStatementStructure,
@@ -36,6 +38,12 @@ interface TransformedFunction {
     FuncDesc: OptionalKind<FunctionDeclarationStructure>,
     ParamDesc: OptionalKind<InterfaceDeclarationStructure>
 }
+
+const NoTransform = new Set([
+    'KDGetOrMakeRenderTexture',
+    'KDTex',
+    'KDGetOutlineFilter',
+])
 
 const TransformFunction =
     (func: FunctionDeclaration) => {
@@ -70,17 +78,13 @@ const TransformFunction =
                     argPack
                 ],
                 statements: writer => {
-                    // const argList =
-                    //     funcParams
-                    //         .map(param => `${argPack.name}.${param.getName()}`)
-                    //         .join(', ')
-                    // writer.writeLine(`return /* @__PURE__ */globalThis.${func.getName()}(${argList})`)
                     writer
                         .write('return /* @__PURE__ */globalThis.').write(funcName).writeLine('(')
                         .indent(() => {
                             for (let i = 0; i < funcParams.length; i++) {
                                 const param = funcParams[i]
                                 writer
+                                    .conditionalWrite(param.isRestParameter(), '...')
                                     .write(argPack.name).write('.').write(param.getName())
                                     .conditionalWrite(i < funcParams.length - 1, ',')
                                     .newLine()
@@ -92,13 +96,18 @@ const TransformFunction =
             return [newFunc, newIntarface] as const
         }
 
-        let parameterPack: OptionalKind<InterfaceDeclarationStructure> | null = null
-        if (funcParams.length > 1) {
-            const [packedFunc, paramPack] = GeneratePackedFunction()
-            parameterPack = paramPack
-            return <TransformedFunction>{
-                FuncDesc: packedFunc,
-                ParamDesc: parameterPack
+        if (
+            funcParams.length > 1 &&
+            func.getTypeParameters().length === 0 &&
+            !NoTransform.has(funcName)
+        ) {
+            const generated = GeneratePackedFunction()
+            if (null != generated) {
+                const [packedFunc, paramPack] = generated
+                return <TransformedFunction>{
+                    FuncDesc: packedFunc,
+                    ParamDesc: paramPack
+                }
             }
         }
         else {
@@ -107,21 +116,6 @@ const TransformFunction =
     }
 
 //#endregion
-
-function GenerateIndexFile(dir: Directory) {
-    const indexFile = dir.createSourceFile('index.ts')
-    dir
-        .getSourceFiles()
-        .forEach(file => {
-            const fileName = file.getBaseNameWithoutExtension();
-            if (fileName !== 'index') {
-                indexFile.addExportDeclaration({
-                    moduleSpecifier: `./${fileName}`
-                })
-            }
-        })
-    return indexFile
-}
 
 export function TransformFunctions(outputDir: Directory, sourceFile: SourceFile) {
     const resultFileList = <SourceFile[]>[]
