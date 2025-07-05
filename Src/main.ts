@@ -1,5 +1,5 @@
 import * as TSMorph from 'ts-morph'
-import { TransformFunctionInSourceFile } from './SourceTransformer.js'
+import { TransformFunctions } from './SourceTransformer.js'
 
 const KDInterfaceProject = new TSMorph.Project()
 const GeneratedProject = new TSMorph.Project({
@@ -10,11 +10,13 @@ const GeneratedProject = new TSMorph.Project({
 const KDInterface = KDInterfaceProject.addSourceFileAtPath('KinkyDungeon/out/main.d.ts')
 const CodeGenFolder = GeneratedProject.createDirectory('Generated').createDirectory('Src')
 
-const transformResult = TransformFunctionInSourceFile(CodeGenFolder)(KDInterface)
+const transformResult = TransformFunctions(CodeGenFolder, KDInterface)
 const indexFile = CodeGenFolder.createSourceFile('index.ts')
-indexFile.addStatements(writer => writer.writeLine(
-    `export * from './${transformResult.getBaseName()}'`
-))
+transformResult.forEach(file =>
+    indexFile.addStatements(writer => writer.writeLine(
+        `export * from './${file.getBaseNameWithoutExtension()}'`
+    ))
+)
 
 GeneratedProject.saveSync()
 console.log()
