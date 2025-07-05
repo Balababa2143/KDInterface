@@ -3,12 +3,12 @@ import { TransformFunctions } from './SourceTransformer.js'
 
 const KDInterfaceProject = new TSMorph.Project()
 const GeneratedProject = new TSMorph.Project({
-    tsConfigFilePath: 'Generated/tsconfig.json'
+    tsConfigFilePath: 'Structured/tsconfig.json'
 })
 
 
 const KDInterface = KDInterfaceProject.addSourceFileAtPath('KinkyDungeon/out/main.d.ts')
-const CodeGenFolder = GeneratedProject.createDirectory('Generated').createDirectory('Src')
+const CodeGenFolder = GeneratedProject.createDirectory('Structured').createDirectory('src')
 
 const transformResult = TransformFunctions(CodeGenFolder, KDInterface)
 const indexFile = CodeGenFolder.createSourceFile('index.ts')

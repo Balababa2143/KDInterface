@@ -9,5 +9,5 @@ package-lock.json
 Include
 Build
 Deploy
-Generated
+Structured
 *.tsbuildinfo

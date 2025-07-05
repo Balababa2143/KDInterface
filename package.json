@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "description": "Code gen project creating convenience wrapper for kinky dungeon",
     "scripts": {
-        "clean": "npx rimraf ./Build ./Include ./Generated ./Deploy",
-        "copy-asset": "npx copyfiles -u 1 Asset/**/* Generated",
+        "clean": "npx rimraf ./Build ./Include ./Structured ./Deploy",
+        "copy-asset": "npx copyfiles -u 1 Asset/**/* Structured",
         "build-generator": "npx tsc",
         "run-generator": "node Build/main.js",
-        "build-generated": "tsc --project ./Generated/tsconfig.json",
+        "build-generated": "tsc --project ./Structured/tsconfig.json",
         "build": "npm run build-generator && npm run copy-asset && npm run run-generator"
     },
     "type": "module",
