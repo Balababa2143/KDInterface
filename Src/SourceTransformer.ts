@@ -39,12 +39,6 @@ interface TransformedFunction {
     ParamDesc: OptionalKind<InterfaceDeclarationStructure>
 }
 
-const NoTransform = new Set([
-    'KDGetOrMakeRenderTexture',
-    'KDTex',
-    'KDGetOutlineFilter',
-])
-
 const TransformFunction =
     (func: FunctionDeclaration) => {
         const funcParams = func.getParameters()
@@ -98,8 +92,7 @@ const TransformFunction =
 
         if (
             funcParams.length > 1 &&
-            func.getTypeParameters().length === 0 &&
-            !NoTransform.has(funcName)
+            func.getTypeParameters().length === 0
         ) {
             const generated = GeneratePackedFunction()
             if (null != generated) {

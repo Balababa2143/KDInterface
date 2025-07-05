@@ -4,4 +4,4 @@ Code gen project creating convenience wrapper for kinky dungeon
 ## Build Steps
 
 1. Run build script (`npm run build`) in the KinkyDungeon folder.
-2. Run the main build script (`npm run build`) in the root folder of this project.
+2. Run the main build script (`npm run rebuild`) in the root folder of this project.

@@ -10,13 +10,7 @@ const GeneratedProject = new TSMorph.Project({
 const KDInterface = KDInterfaceProject.addSourceFileAtPath('KinkyDungeon/out/main.d.ts')
 const CodeGenFolder = GeneratedProject.createDirectory('Structured').createDirectory('src')
 
-const transformResult = TransformFunctions(CodeGenFolder, KDInterface)
-const indexFile = CodeGenFolder.createSourceFile('index.ts')
-transformResult.forEach(file =>
-    indexFile.addStatements(writer => writer.writeLine(
-        `export * from './${file.getBaseNameWithoutExtension()}'`
-    ))
-)
+TransformFunctions(CodeGenFolder, KDInterface)
 
 GeneratedProject.saveSync()
 console.log()
