@@ -73,7 +73,7 @@ const TransformFunction =
                 ],
                 statements: writer => {
                     writer
-                        .write('return /* @__PURE__ */globalThis.').write(funcName).writeLine('(')
+                        .write('return globalThis.').write(funcName).writeLine('(')
                         .indent(() => {
                             for (let i = 0; i < funcParams.length; i++) {
                                 const param = funcParams[i]
