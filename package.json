@@ -3,11 +3,13 @@
     "version": "1.0.0",
     "description": "Code gen project creating convenience wrapper for kinky dungeon",
     "scripts": {
-        "clean": "npx rimraf ./Build ./Include ./Structured ./Deploy",
-        "copy-asset": "npx copyfiles -u 1 Asset/**/* Structured",
+        "clean": "npx rimraf Build/* Include/* Generated/* Deploy/* --glob",
+        "copy-asset": "npx copyfiles -u 1 GeneratedProjectAsset/**/* Generated && npx copyfiles -u 1 PackageAsset/**/* Deploy",
         "build-generator": "npx tsc",
         "run-generator": "node Build/main.js",
-        "generate": "npm run build-generator && npm run copy-asset && npm run run-generator",
+        "build-generated": "cd Generated && npx tsc && cd..",
+        "rename-emited-files": "node -e \"require('fs').readdirSync('./Deploy/Script').forEach(f => { if (f.endsWith('.js')) require('fs').renameSync('./Deploy/Script/' + f, './Deploy/Script/' + f.replace('.js', '')) })\"",
+        "generate": "npm run build-generator && npm run run-generator && npm run copy-asset && npm run build-generated && npm run rename-emited-files",
         "rebuild": "npm run clean && npm run generate"
     },
     "type": "module",

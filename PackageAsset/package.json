@@ -1,11 +1,18 @@
 {
-    "name": "kinkydungeoninterfacewrapper",
-    "version": "1.0.0",
+    "name": "kd-structured",
+    "version": "5.4.78",
     "description": "Code gen project creating convenience wrapper for kinky dungeon",
     "type": "module",
     "author": "Balababa2143@gmail.com",
     "license": "MIT",
-    "dependencies": {
+    "main": "Script/index",
+    "types": "@Type/index.d.ts",
+    "files": [
+        "Script/",
+        "@Type/",
+        "tsconfig.json"
+    ],
+    "devDependencies": {
         "pixi-filters": "5.2.0",
         "pixi.js": "^7.2.1",
         "pixi.js-legacy": "^7.2.1"

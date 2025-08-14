@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
         "strict": false,
-        "outDir": "Deploy",
-        "inlineSourceMap": true,
+        "outDir": "../Deploy/Script",
+        "declarationDir": "../Deploy/@Type",
+        "declaration": true,
+        "sourceMap": true,
         "target": "ESNext",
         "module": "ESNext",
         "moduleResolution": "Node",
@@ -13,10 +15,11 @@
         "lib": [
             "ESNext",
             "DOM"
-        ]
+        ],
+        "noEmitOnError": false
     },
     "include": [
-        "Src/**/*"
+        "./**/*.ts"
     ],
     "references": [
         {

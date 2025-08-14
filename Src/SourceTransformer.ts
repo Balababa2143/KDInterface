@@ -46,6 +46,15 @@ const TransformFunction =
         if (null == funcName) {
             return null
         }
+        // work around imported type issure until I find better solutions
+        else if ([
+            'KDGetOrMakeRenderTexture',
+            'KDGetOutlineFilter',
+            'KDTex'
+        ].some(name => funcName === name))
+        {
+            return null
+        }
 
         const GeneratePackedFunction = () => {
             const newIntarface: OptionalKind<InterfaceDeclarationStructure> = {
