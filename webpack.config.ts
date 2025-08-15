@@ -1,8 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import archiver from 'archiver'
-import webpack, { WebpackPluginFunction, WebpackPluginInstance } from 'webpack'
-import NpmDtsPlugin from 'npm-dts-webpack-plugin'
+import webpack from 'webpack'
 
 const EntryFile = 'Generated/index.ts'
 const BundleDir = 'Bundle'
@@ -108,6 +107,12 @@ function Configurate(env: Record<string, unknown>, argv: Record<string, string>)
                 type: 'module'
             },
             clean: true
+        },
+        externalsType: 'var',
+        externals: {
+            "pixi-filters": "PIXI",
+            "pixi.js": "PIXI",
+            "pixi.js-legacy": "PIXI"
         },
         module: {
             rules: [
