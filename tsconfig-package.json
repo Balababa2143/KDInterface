@@ -1,20 +1,29 @@
 {
     "compilerOptions": {
         "strict": false,
+        "outDir": "Deploy/package/dist",
+        "declarationDir": "Deploy/package/@type",
+        "declaration": true,
+        "inlineSourceMap": true,
         "target": "ESNext",
         "module": "ESNext",
         "moduleResolution": "bundler",
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
-        "composite": true,
         "skipLibCheck": true,
         "lib": [
             "ESNext",
             "DOM"
         ],
+        "noEmitOnError": false,
+        "incremental": false
     },
     "include": [
-        "@type/**/*",
-        "dist/**/*"
+        "./Generated/**/*.ts"
     ],
+    "references": [
+        {
+            "path": "./KinkyDungeon"
+        }
+    ]
 }

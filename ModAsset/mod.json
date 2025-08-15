@@ -1,0 +1,18 @@
+{
+	"modname": "KDInterface",
+	"moddesc": "Utility mod for adding named parameter support for most KD functions",
+	"author": "Balababa2143@gmail.com",
+	"modbuild": "5.4.78",
+	"gamemajor": 5,
+	"gameminor": 4,
+	"gamepatch_min": 78,
+	"gamepatch_max": 78,
+	"priority": 10,
+	"dependencies": {},
+	"optional": {},
+	"incompatibilities": {},
+	"loadbefore": [],
+	"loadafter": [],
+	"fileorder": [
+	]
+}

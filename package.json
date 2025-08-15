@@ -3,22 +3,34 @@
     "version": "1.0.0",
     "description": "Code gen project creating convenience wrapper for kinky dungeon",
     "scripts": {
-        "clean": "npx rimraf Build/* Include/* Generated/* Deploy/* --glob",
-        "copy-asset": "npx copyfiles -u 1 GeneratedProjectAsset/**/* Generated && npx copyfiles -u 1 PackageAsset/**/* Deploy",
+        "clean": "npx rimraf Generated/* Generator/* Bundle/* Deploy/* --glob",
+        "copy-asset": "npx copyfiles -u 1 GeneratedProjectAsset/**/* Generated && npx copyfiles -u 1 PackageAsset/**/* Deploy/package",
         "build-generator": "npx tsc",
-        "run-generator": "node Build/main.js",
-        "build-generated": "cd Generated && npx tsc && cd..",
-        "rename-emited-files": "node -e \"require('fs').readdirSync('./Deploy/Script').forEach(f => { if (f.endsWith('.js')) require('fs').renameSync('./Deploy/Script/' + f, './Deploy/Script/' + f.replace('.js', '')) })\"",
-        "generate": "npm run build-generator && npm run run-generator && npm run copy-asset && npm run build-generated && npm run rename-emited-files",
+        "run-generator": "node Generator/main.js",
+        "build-generated": "npx tsc --project tsconfig-package.json",
+        "rename-emited-files": "node -e \"require('fs').readdirSync('./Deploy/package/dist').forEach(f => { if (f.endsWith('.js')) require('fs').renameSync('./Deploy/package/dist/' + f, './Deploy/package/dist/' + f.replace('.js', '')) })\"",
+        "generate-mod-dev": "node --loader ts-node/esm node_modules/webpack-cli/bin/cli.js --config webpack.config.ts --mode development",
+        "generate-mod-prod": "node --loader ts-node/esm node_modules/webpack-cli/bin/cli.js --config webpack.config.ts --mode production",
+        "generate": "npm run build-generator && npm run run-generator && npm run copy-asset && npm run build-generated && npm run rename-emited-files && npm run generate-mod-dev",
         "rebuild": "npm run clean && npm run generate"
     },
     "type": "module",
     "author": "Balababa2143@gmail.com",
     "license": "MIT",
     "devDependencies": {
+        "@types/archiver": "latest",
+        "@types/node": "latest",
+        "@types/webpack": "latest",
+        "archiver": "latest",
         "copyfiles": "latest",
+        "npm-dts-webpack-plugin": "latest",
         "rimraf": "latest",
-        "ts-morph": "latest"
+        "ts-loader": "latest",
+        "ts-morph": "latest",
+        "ts-node": "latest",
+        "typescript": "latest",
+        "webpack": "latest",
+        "webpack-cli": "latest"
     },
     "exports": [
         "./Deploy/index.js"

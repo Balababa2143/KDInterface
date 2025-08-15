@@ -3,7 +3,7 @@
         "strict": true,
         "alwaysStrict": true,
         "strictBindCallApply": true,
-        "outDir": "Build",
+        "outDir": "Generator",
         "sourceMap": true,
         "target": "ESNext",
         "module": "ESNext",

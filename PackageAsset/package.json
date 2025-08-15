@@ -5,11 +5,11 @@
     "type": "module",
     "author": "Balababa2143@gmail.com",
     "license": "MIT",
-    "main": "Script/index",
-    "types": "@Type/index.d.ts",
+    "main": "dist/index",
+    "types": "@type/index.d.ts",
     "files": [
-        "Script/",
-        "@Type/",
+        "dist/",
+        "@type/",
         "tsconfig.json"
     ],
     "sideEffects":[

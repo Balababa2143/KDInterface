@@ -3,7 +3,7 @@ import { TransformFunctions } from './SourceTransformer.js'
 
 const KDInterfaceProject = new TSMorph.Project()
 const GeneratedProject = new TSMorph.Project({
-    tsConfigFilePath: 'GeneratedProjectAsset/tsconfig.json'
+    // tsConfigFilePath: 'tsconfig-package.json'
 })
 
 

@@ -7,8 +7,8 @@ node_modules
 package-lock.json
 
 # output
-Include
-Build
-Deploy
+Generator
 Generated
+Bundle
+Deploy
 *.tsbuildinfo
