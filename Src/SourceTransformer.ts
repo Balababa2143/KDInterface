@@ -116,10 +116,17 @@ export function TransformFunctions(outputDir: Directory, sourceFile: SourceFile)
         const result = TransformFunction(originalFunc)
         if (result != null) {
             // console.log(`Creating ${result.FuncDesc.name ?? 'null'}`)
-            const resultFile = outputDir.createSourceFile(result.FuncDesc.name! + '.ts')
-            resultFile.addInterface(result.ParamDesc)
-            resultFile.addFunction(result.FuncDesc)
-            resultFileList.push(resultFile)
+            const fileName = result.FuncDesc.name! + '.ts'
+            if (!outputDir.getSourceFile(fileName)) {
+                const resultFile = outputDir.createSourceFile(result.FuncDesc.name! + '.ts')
+                resultFile.addInterface(result.ParamDesc)
+                resultFile.addFunction(result.FuncDesc)
+                resultFileList.push(resultFile)
+            }
+            else
+            {
+                console.warn(`File name "${fileName}" already exists!`)
+            }
         }
     }
     return resultFileList
