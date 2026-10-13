@@ -1,11 +1,12 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import archiver from 'archiver'
+import {ZipArchive, Archiver} from 'archiver'
 import webpack from 'webpack'
 
 const EntryFile = 'Generated/index.ts'
 const BundleDir = 'Bundle'
-const ArchiveFile = 'Deploy/ks-structured.zip'
+const ArchiveFile = 'Deploy/kd-structured.zip'
+const TypeFolder = 'Generated/@type'
 const AssetFolders: string[] = [
     'ModAsset'
 ]
@@ -17,9 +18,12 @@ async function CopyAssets() {
                 fs.promises.cp(assetFolder, BundleDir, { recursive: true })
         )
     )
+    if (fs.existsSync(TypeFolder)) {
+        await fs.promises.cp(TypeFolder, path.join(BundleDir, '@type'), { recursive: true })
+    }
 }
 
-function SetArchiverEventHandlers(writeStream: fs.WriteStream, archiver: archiver.Archiver) {
+function SetArchiverEventHandlers(writeStream: fs.WriteStream, archiver: Archiver) {
     writeStream.on('close', function () {
         console.log(archiver.pointer() + ' total bytes');
         console.log('archiver has been finalized and the output file descriptor has closed.');
@@ -47,7 +51,8 @@ function SetArchiverEventHandlers(writeStream: fs.WriteStream, archiver: archive
 async function BuildArchive() {
     const archiveFilePath = path.resolve(ArchiveFile)
     const stream = fs.createWriteStream(archiveFilePath)
-    const zipArchiver = archiver('zip', {
+
+    const zipArchiver = new ZipArchive({
         zlib: {
             level: 9
         }
@@ -74,6 +79,12 @@ function PreBuild(): webpack.WebpackPluginInstance {
                 if (fs.existsSync(archiveFilePath)) {
                     fs.unlinkSync(archiveFilePath)
                 }
+
+                for (const staleFolder of [TypeFolder, path.join(BundleDir, '@type')]) {
+                    if (fs.existsSync(staleFolder)) {
+                        fs.rmSync(staleFolder, { recursive: true })
+                    }
+                }
             })
         }
     }
@@ -92,16 +103,14 @@ function PostBuild(): webpack.WebpackPluginInstance {
     }
 }
 
-function Configurate(env: Record<string, unknown>, argv: Record<string, string>): webpack.Configuration {
+function Config(env: Record<string, unknown>, argv: Record<string, string>): webpack.Configuration {
 
     return {
         entry: path.resolve(EntryFile),
-        experiments: {
-            outputModule: true, // Enable the outputModule experiment
-        },
         output: {
             path: path.join(path.resolve(BundleDir), 'kd-structured'),
             filename: 'bundle.es',
+            module: true,
             library: {
                 // name: 'kd-structured',
                 type: 'module'
@@ -119,12 +128,8 @@ function Configurate(env: Record<string, unknown>, argv: Record<string, string>)
                 {
                     test: /\.ts?$/,
                     use: {
+                        // ts-loader finds Generated/tsconfig.json via its default config discovery from the entry folder.
                         'loader': 'ts-loader',
-                        'options': {
-                            projectReferences: true,
-                            configFile: 'tsconfig-mod.json',
-                            ignoreDiagnostics: [2742]
-                        }
                     },
                     exclude: /node_modules/,
                 },
@@ -141,4 +146,4 @@ function Configurate(env: Record<string, unknown>, argv: Record<string, string>)
     }
 }
 
-export default Configurate
+export default Config

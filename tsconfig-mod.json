@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "strict": false,
-        "declarationDir": "Bundle/@type/kd-structured",
+        "rootDir": ".",
+        "declarationDir": "./@type/kd-structured",
         "declaration": true,
         "inlineSourceMap": true,
         "target": "ESNext",
@@ -18,11 +19,7 @@
         "incremental": false
     },
     "include": [
-        "./Generated/**/*.ts"
-    ],
-    "references": [
-        {
-            "path": "./KinkyDungeon"
-        }
+        "../KinkyDungeon/out/main.d.ts",
+        "./**/*.ts"
     ]
 }

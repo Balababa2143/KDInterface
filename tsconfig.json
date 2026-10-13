@@ -3,17 +3,21 @@
         "strict": true,
         "alwaysStrict": true,
         "strictBindCallApply": true,
-        "outDir": "Generator",
-        "sourceMap": true,
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
         "target": "ESNext",
-        "module": "ESNext",
-        "moduleResolution": "node",
+        "module": "node16",
+        "moduleResolution": "node16",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "lib": [
             "DOM",
             "ESNext",
             "ESNext.Array"
+        ],
+        "types": [
+            "node"
         ],
         "skipLibCheck": true
     },

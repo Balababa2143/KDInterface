@@ -1,4 +1,4 @@
-import {
+import type {
     Directory,
     FunctionDeclaration,
     FunctionDeclarationStructure,
@@ -97,10 +97,10 @@ const TransformFunction =
             const generated = GeneratePackedFunction()
             if (null != generated) {
                 const [packedFunc, paramPack] = generated
-                return <TransformedFunction>{
+                return {
                     FuncDesc: packedFunc,
                     ParamDesc: paramPack
-                }
+                } as TransformedFunction
             }
         }
         else {
@@ -111,7 +111,7 @@ const TransformFunction =
 //#endregion
 
 export function TransformFunctions(outputDir: Directory, sourceFile: SourceFile) {
-    const resultFileList = <SourceFile[]>[]
+    const resultFileList = [] as SourceFile[]
     for (const originalFunc of sourceFile.getFunctions()) {
         const result = TransformFunction(originalFunc)
         if (result != null) {

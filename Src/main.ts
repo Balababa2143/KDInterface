@@ -1,10 +1,12 @@
 import * as TSMorph from 'ts-morph'
-import { TransformFunctions } from './SourceTransformer.js'
-import { node } from 'webpack'
+import { TransformFunctions } from './SourceTransformer.ts'
+import * as fs from 'fs'
 
 const KDInterfaceProject = new TSMorph.Project()
+fs.mkdirSync('./Generated', { recursive: true })
+fs.copyFileSync('./tsconfig-mod.json', './Generated/tsconfig.json')
 const GeneratedProject = new TSMorph.Project({
-    // tsConfigFilePath: 'tsconfig-package.json'
+    tsConfigFilePath: './Generated/tsconfig.json'
 })
 
 

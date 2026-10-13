@@ -7,7 +7,6 @@ node_modules
 package-lock.json
 
 # output
-Generator
 Generated
 Bundle
 Deploy

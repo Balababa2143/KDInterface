@@ -1,8 +1,6 @@
-if (!KDEventMapGeneric['afterLoadMods']) {
-    KDEventMapGeneric['afterLoadMods'] = {}
-}
-
-KDEventMapGeneric['afterLoadMods']['kd-structured'] = (async () => {
+// Publishes the kd-structured bundle through an import map so that mods can `import('kd-structured')`.
+// This file is executed after kd-structured/bundle.es is registered in KDModFiles (see mod.json fileorder).
+;(async () => {
     const modFile = KDModFiles['Game/kd-structured/bundle.es']
     const originalBlob = await (await fetch(modFile)).blob()
     const newBlob = originalBlob.slice(0, originalBlob.size, 'text/javascript')
@@ -18,4 +16,4 @@ KDEventMapGeneric['afterLoadMods']['kd-structured'] = (async () => {
     injectPoint.innerHTML = JSON.stringify(importMap)
     document.head.prepend(injectPoint)
     console.log('kd-structured ready')
-});
+})()
