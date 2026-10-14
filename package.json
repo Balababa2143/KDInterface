@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Code gen project creating convenience wrapper for kinky dungeon",
     "scripts": {
-        "clean": "npx rimraf Generated/* Bundle/* Deploy/* --glob",
+        "clean": "npx rimraf Generated/* Bundle/* Deploy/* Declaration/* --glob",
         "typecheck": "npx tsc --noEmit",
         "generate": "npm run clean && node Src/main.ts && npx webpack --config webpack.config.ts --mode development",
         "generate-prod": "npm run clean && node Src/main.ts && npx webpack --config webpack.config.ts --mode production",

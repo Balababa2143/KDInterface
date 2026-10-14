@@ -10,7 +10,8 @@ const ArchiveFile = 'Deploy/kd-structured.zip'
 const TypeFolder = 'Generated/@type'
 /** npm shaped types package, staged outside the mod archive. */
 const TypeBundleDir = 'Deploy/types'
-const TypeArchiveFile = 'Deploy/kd-structured-types.zip'
+const DeclarationDir = 'Declaration'
+const TypeArchiveFile = path.join(DeclarationDir, 'kd-structured-types.zip')
 /** package.json / tsconfig.json published alongside the declarations. */
 const PackageAssetFolder = 'PackageAsset'
 const AssetFolders: string[] = [
@@ -93,8 +94,10 @@ function PreBuild(): webpack.WebpackPluginInstance {
             compiler.hooks.beforeCompile.tapPromise('DoneArchiveBuilding', async (_) => {
                 const archiveDir = path.dirname(path.resolve(ArchiveFile))
                 if (!fs.existsSync(archiveDir)) {
-                    fs.mkdirSync(archiveDir, { recursive: true })
+                    await fs.promise.mkdir(archiveDir, { recursive: true })
                 }
+
+                await fs.promises.mkdir(DeclarationDir, { recursive: true })
 
                 const stalePaths = [
                     ArchiveFile,
