@@ -1,18 +1,16 @@
 {
     "name": "kd-structured",
     "version": "5.4.78",
-    "description": "Code gen project creating convenience wrapper for kinky dungeon",
+    "description": "Type declarations for the kd-structured Kinky Dungeon mod",
     "type": "module",
     "author": "Balababa2143@gmail.com",
     "license": "MIT",
-    "main": "dist/index",
-    "types": "@type/index.d.ts",
+    "types": "@type/kd-structured/index.d.ts",
     "files": [
-        "dist/",
         "@type/",
         "tsconfig.json"
     ],
-    "sideEffects":[
+    "sideEffects": [
 
     ],
     "dependencies": {
